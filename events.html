@@ -11,10 +11,22 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
     <style>
+        /* High-Tech Entrance Animations */
+        @keyframes fadeSlideUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes laserSweep {
+            0% { width: 0; opacity: 0; left: 50%; }
+            50% { opacity: 1; }
+            100% { width: 100px; opacity: 0.5; left: calc(50% - 50px); }
+        }
+
         /* Minimalist Hero */
         .tesla-hero {
-            height: 50vh;
-            min-height: 400px;
+            height: 45vh;
+            min-height: 350px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -28,10 +40,23 @@
         .tesla-hero h1 {
             font-size: 4rem;
             font-weight: 700;
-            letter-spacing: 4px;
+            letter-spacing: 6px;
             text-transform: uppercase;
             color: #fff;
             margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeSlideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* The Live Animation Line under the title */
+        .hero-laser {
+            height: 2px;
+            background: #fff;
+            box-shadow: 0 0 10px #fff, 0 0 20px var(--primary-color);
+            margin: 0 auto 20px;
+            position: relative;
+            animation: laserSweep 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.5s;
         }
 
         .tesla-hero p {
@@ -39,6 +64,9 @@
             color: var(--text-muted);
             max-width: 500px;
             font-weight: 300;
+            opacity: 0;
+            animation: fadeSlideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.3s;
         }
 
         /* Events Feed Container */
@@ -48,91 +76,143 @@
             padding: 0 20px 100px;
             display: flex;
             flex-direction: column;
-            gap: 60px; /* Lots of breathing room */
+            gap: 50px;
             position: relative;
             z-index: 10;
         }
 
-        /* The Tesla/SpaceX Style Card */
+        /* Enhanced High-Visibility Cards */
         .tesla-card {
             width: 100%;
-            height: 65vh; /* Tall cards for mobile scrolling */
-            min-height: 500px;
-            max-height: 700px;
-            border-radius: 24px;
-            background: linear-gradient(to bottom, rgba(2, 11, 22, 0.2) 0%, rgba(2, 11, 22, 0.9) 100%);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            height: 60vh; 
+            min-height: 450px;
+            max-height: 600px;
+            border-radius: 16px;
+            /* Brighter gradient and stronger blur for visibility */
+            background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(2, 11, 22, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* Pushes content to the bottom for thumbs */
-            padding: 50px;
+            justify-content: flex-end; 
+            padding: 40px;
             text-decoration: none;
             position: relative;
             overflow: hidden;
             opacity: 0;
             transform: translateY(50px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Scroll Reveal Class */
+        .tesla-card:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 0 80px rgba(255, 255, 255, 0.02);
+            transform: translateY(-5px);
+        }
+
         .tesla-card.in-view {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Subtle Top Accent Line */
+        /* Bright Accent Line */
         .tesla-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 3px;
-            background: var(--card-accent, rgba(255,255,255,0.2));
-            opacity: 0.7;
+            height: 4px;
+            background: var(--card-accent, rgba(255,255,255,0.3));
+            box-shadow: 0 0 15px var(--card-accent);
         }
 
-        /* Card Content Formatting */
-        .card-status-bar {
+        /* Creative Status Badges */
+        .card-header {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            right: 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            width: 100%;
         }
 
-        .status-pill {
+        .creative-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            border-radius: 4px; /* Tech-style square edges */
+            font-size: 0.75rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 1px solid var(--card-accent);
-            color: var(--card-accent);
-            background: rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Live/Ongoing Badge */
+        .badge-live {
+            background: rgba(0, 255, 170, 0.1);
+            color: #00ffaa;
+            border: 1px solid rgba(0, 255, 170, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.2);
+        }
+        
+        /* Upcoming Badge */
+        .badge-upcoming {
+            background: rgba(0, 240, 255, 0.1);
+            color: #00f0ff;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+        }
+
+        /* Past Badge */
+        .badge-past {
+            background: rgba(255, 255, 255, 0.05);
+            color: #888;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Glowing Pulse Dot */
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 10px currentColor;
+        }
+        .pulse-dot.anim {
+            animation: fastPulse 1s infinite alternate;
+        }
+
+        @keyframes fastPulse {
+            0% { transform: scale(0.8); opacity: 0.6; }
+            100% { transform: scale(1.3); opacity: 1; }
         }
 
         .event-date {
             font-family: var(--font-heading);
             color: #fff;
             font-size: 1rem;
-            opacity: 0.8;
+            font-weight: 500;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
+        /* Card Text */
         .tesla-card h2 {
             font-size: 3rem;
             color: #fff;
             margin-bottom: 15px;
             line-height: 1.1;
             letter-spacing: -1px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
         }
 
         .tesla-card p {
             font-size: 1.1rem;
-            color: #a0aec0;
+            color: #cbd5e1; /* Brighter slate text */
             line-height: 1.6;
             margin-bottom: 35px;
             max-width: 600px;
@@ -143,10 +223,10 @@
         .tesla-btn {
             display: inline-block;
             width: fit-content;
-            padding: 15px 40px;
-            border-radius: 4px; /* Slightly squarer, very technical */
+            padding: 14px 35px;
+            border-radius: 4px;
             background: transparent;
-            border: 2px solid #fff;
+            border: 1px solid #fff;
             color: #fff;
             font-size: 0.9rem;
             font-weight: 600;
@@ -168,19 +248,18 @@
 
         /* Mobile Optimization */
         @media (max-width: 768px) {
-            .tesla-hero h1 { font-size: 2.8rem; }
-            .events-feed { gap: 40px; padding-bottom: 60px; }
+            .tesla-hero h1 { font-size: 2.5rem; }
+            .events-feed { gap: 30px; padding-bottom: 50px; }
             .tesla-card {
                 padding: 30px 20px;
-                height: 60vh;
-                min-height: 450px;
-                border-radius: 16px;
+                height: 55vh;
+                min-height: 420px;
             }
-            .tesla-card h2 { font-size: 2.2rem; }
-            .tesla-card p { font-size: 1rem; margin-bottom: 30px; }
-            .card-status-bar { margin-bottom: 15px; }
+            .card-header { top: 25px; left: 20px; right: 20px; }
+            .creative-badge { padding: 6px 12px; font-size: 0.7rem; }
+            .tesla-card h2 { font-size: 2.2rem; margin-top: 40px; }
+            .tesla-card p { font-size: 1rem; margin-bottom: 25px; }
             
-            /* Full width button for thumbs on mobile */
             .tesla-btn {
                 width: 100%;
                 padding: 15px 0;
@@ -208,14 +287,17 @@
 
     <header class="tesla-hero">
         <h1>Events</h1>
+        <div class="hero-laser"></div>
         <p>Discover our upcoming simulations, cultural fests, and hackathons.</p>
     </header>
 
     <main class="events-feed">
         
         <a href="techcorp-summit.html" class="tesla-card theme-green scroll-reveal">
-            <div class="card-status-bar">
-                <span class="status-pill">Registration Open</span>
+            <div class="card-header">
+                <div class="creative-badge badge-live">
+                    <span class="pulse-dot anim"></span> Registration Open
+                </div>
                 <span class="event-date">March 30</span>
             </div>
             <h2>TechCorp Summit</h2>
@@ -224,8 +306,10 @@
         </a>
 
         <a href="cultural-event.html" class="tesla-card theme-cyan scroll-reveal">
-            <div class="card-status-bar">
-                <span class="status-pill">Registration Open</span>
+            <div class="card-header">
+                <div class="creative-badge badge-upcoming">
+                    <span class="pulse-dot"></span> Upcoming Event
+                </div>
                 <span class="event-date">March 31</span>
             </div>
             <h2>Cultural Event '26</h2>
@@ -234,8 +318,10 @@
         </a>
 
         <a href="event-details.html" class="tesla-card theme-gray scroll-reveal">
-            <div class="card-status-bar">
-                <span class="status-pill" style="border-color: rgba(255,255,255,0.2); color: #fff;">Event Ended</span>
+            <div class="card-header">
+                <div class="creative-badge badge-past">
+                    <span style="font-size: 1rem; margin-right: 4px;">⛔</span> Past Event
+                </div>
                 <span class="event-date">Feb 20–26</span>
             </div>
             <h2>CTRL + LOL</h2>
@@ -268,15 +354,13 @@
             const observerOptions = {
                 root: null,
                 rootMargin: '0px',
-                threshold: 0.15 // Triggers when 15% of the card is visible
+                threshold: 0.15 
             };
 
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('in-view');
-                        // Optional: stop observing once revealed
-                        // observer.unobserve(entry.target);
                     }
                 });
             }, observerOptions);
