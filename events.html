@@ -11,6 +11,76 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
     <style>
+        /* --- TECH BANNER OVERLAP STYLES --- */
+        .tech-banner-container {
+            position: relative;
+            width: calc(100% - 40px);
+            max-width: 1000px;
+            height: 250px;
+            margin: 120px auto 50px; /* Spacing from navbar and to the cards */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+            z-index: 10;
+        }
+        
+        /* GIF-like Infinite Moving Grid */
+        .tech-gif-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                linear-gradient(rgba(2, 11, 22, 0.6), rgba(2, 11, 22, 0.9)),
+                repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0, 240, 255, 0.15) 20px, rgba(0, 240, 255, 0.15) 21px),
+                repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(0, 240, 255, 0.15) 20px, rgba(0, 240, 255, 0.15) 21px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            animation: gridMove 2s linear infinite;
+            z-index: 1;
+        }
+        
+        /* Looping Animation */
+        @keyframes gridMove {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 0 0, 0 40px, 40px 0; }
+        }
+        
+        /* Radar Scanline Overlap */
+        .tech-gif-bg::after {
+            content: '';
+            position: absolute;
+            top: -100%; left: 0; right: 0; height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0, 240, 255, 0.4), transparent);
+            animation: scanline 3s linear infinite;
+        }
+        
+        @keyframes scanline {
+            0% { top: -100%; }
+            100% { top: 100%; }
+        }
+        
+        /* Overlapping Text */
+        .tech-banner-title {
+            position: relative;
+            z-index: 2; /* Puts text above the animation */
+            font-family: var(--font-heading);
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.8), 0 0 40px rgba(0, 240, 255, 0.4);
+            margin: 0;
+            text-align: center;
+        }
+        
+        /* Mobile Tweaks */
+        @media (max-width: 768px) {
+            .tech-banner-container { height: 160px; margin-top: 100px; }
+            .tech-banner-title { font-size: 2.2rem; letter-spacing: 3px; }
+        }
         /* High-Tech Entrance Animations */
         @keyframes fadeSlideUp {
             0% { opacity: 0; transform: translateY(30px); }
