@@ -11,238 +11,254 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     
     <style>
-        /* Events Hero Setup */
+        /* Typography & Hero Animations */
         .events-hero {
+            padding: 160px 20px 80px;
             text-align: center;
-            padding: 150px 20px 60px;
             position: relative;
-            z-index: 2;
+            z-index: 10;
         }
 
-        .events-hero h1 {
-            font-size: 4rem;
+        .gradient-heading {
+            font-size: 5rem;
+            line-height: 1.1;
             margin-bottom: 20px;
-            background: linear-gradient(to right, #fff, var(--primary-color));
+            background: linear-gradient(135deg, #ffffff 0%, #00f0ff 50%, #7000ff 100%);
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            animation: glowText 2s infinite alternate;
+            animation: gradientFlow 5s ease infinite;
+            font-family: var(--font-heading);
+            letter-spacing: -2px;
         }
 
-        .events-hero p {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            max-width: 600px;
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 3D Magnetic Card System */
+        .premium-events-container {
+            max-width: 1300px;
             margin: 0 auto;
+            padding: 0 20px 100px;
+            display: grid;
+            gap: 40px;
+            position: relative;
+            z-index: 10;
         }
 
-        /* Filter Tabs */
-        .filter-container {
+        /* Featured Span-Full Card */
+        .featured-card-wrapper {
+            grid-column: 1 / -1;
+        }
+
+        /* Asymmetric Grid for others */
+        .sub-events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        /* The Card Frame */
+        .magic-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 24px;
+            padding: 2px; /* Border thickness for gradient */
+            text-decoration: none;
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 50px;
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+            will-change: transform;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: slideUpFade 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Staggered entrance */
+        .magic-card:nth-child(1) { animation-delay: 0.1s; }
+        .magic-card:nth-child(2) { animation-delay: 0.2s; }
+        .magic-card:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes slideUpFade {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* The inner glass layer */
+        .magic-card-inner {
+            background: rgba(5, 12, 25, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 22px;
+            padding: 40px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
             position: relative;
             z-index: 2;
+            overflow: hidden;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
         }
 
-        .filter-btn {
+        /* Mouse Tracking Glow Effect */
+        .magic-card::before,
+        .magic-card-inner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        /* Glow on the border */
+        .magic-card::before {
+            background: radial-gradient(
+                800px circle at var(--mouse-x) var(--mouse-y),
+                var(--card-glow-color),
+                transparent 40%
+            );
+            z-index: 1;
+        }
+
+        /* Glow inside the card */
+        .magic-card-inner::before {
+            background: radial-gradient(
+                800px circle at var(--mouse-x) var(--mouse-y),
+                rgba(255, 255, 255, 0.06),
+                transparent 40%
+            );
+            z-index: -1;
+        }
+
+        .magic-card:hover::before,
+        .magic-card:hover .magic-card-inner::before {
+            opacity: 1;
+        }
+
+        /* Card Content Styling */
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            transform: translateZ(30px); /* 3D pop out */
+        }
+
+        .event-type-badge {
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            padding: 10px 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
             border-radius: 30px;
-            font-family: var(--font-heading);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
             backdrop-filter: blur(10px);
         }
 
-        .filter-btn:hover {
-            background: rgba(0, 240, 255, 0.1);
-            color: #fff;
-            transform: translateY(-3px);
-        }
-
-        .filter-btn.active {
-            background: var(--primary-color);
-            color: var(--bg-color);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
-            border-color: var(--primary-color);
-        }
-
-        /* Advanced Cyber Grid Layout */
-        .advanced-events-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
-            position: relative;
-            z-index: 2;
-            padding-bottom: 80px;
-        }
-
-        /* The Cyber Card */
-        .cyber-card {
-            position: relative;
-            background: rgba(2, 11, 22, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            overflow: hidden;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.5s ease;
-            backdrop-filter: blur(12px);
-            opacity: 0;
-            transform: translateY(30px);
-            animation: staggerFadeIn 0.8s forwards;
-        }
-
-        /* Delays for stagger effect */
-        .cyber-card:nth-child(1) { animation-delay: 0.1s; }
-        .cyber-card:nth-child(2) { animation-delay: 0.2s; }
-        .cyber-card:nth-child(3) { animation-delay: 0.3s; }
-        .cyber-card:nth-child(4) { animation-delay: 0.4s; }
-
-        /* Card Hover Effects */
-        .cyber-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--primary-color);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 240, 255, 0.1);
-        }
-
-        .cyber-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 5px;
-            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-
-        .cyber-card:hover::before {
-            transform: translateX(100%);
-        }
-
-        /* Card Elements */
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .cyber-badge {
-            padding: 6px 14px;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .badge-live-green { background: rgba(0, 255, 170, 0.15); color: #00ffaa; border: 1px solid rgba(0, 255, 170, 0.5); }
-        .badge-live-purple { background: rgba(112, 0, 255, 0.15); color: #b980ff; border: 1px solid rgba(112, 0, 255, 0.5); }
-        .badge-live-cyan { background: rgba(0, 240, 255, 0.15); color: #00f0ff; border: 1px solid rgba(0, 240, 255, 0.5); }
-        .badge-ended { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px solid rgba(255, 255, 255, 0.1); }
-
-        .pulsing-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-        .bg-green { background: #00ffaa; box-shadow: 0 0 8px #00ffaa; }
-        .bg-purple { background: #b980ff; box-shadow: 0 0 8px #b980ff; }
-        .bg-cyan { background: #00f0ff; box-shadow: 0 0 8px #00f0ff; }
-
-        .card-date {
-            font-size: 0.85rem;
-            color: var(--text-muted);
+        .event-date {
             font-family: var(--font-heading);
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: 500;
         }
 
-        .cyber-card h3 {
-            font-size: 1.8rem;
+        .magic-card h2 {
+            font-size: 2.5rem;
             margin-bottom: 15px;
             color: #fff;
+            transform: translateZ(40px); /* 3D pop out */
             transition: color 0.3s;
         }
 
-        .cyber-card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
+        .featured-card-wrapper .magic-card h2 {
+            font-size: 3.5rem;
+        }
+
+        .magic-card p {
+            color: #94a3b8;
+            font-size: 1.1rem;
             line-height: 1.6;
-            margin-bottom: 25px;
+            margin-bottom: 40px;
+            transform: translateZ(20px);
             flex-grow: 1;
         }
 
-        /* Card Footer & Action */
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
+        /* Animated Arrow Button */
+        .cyber-btn {
+            display: inline-flex;
             align-items: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 20px;
-        }
-
-        .tags {
-            display: flex;
-            gap: 10px;
-        }
-
-        .tag {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.6);
-            background: rgba(255, 255, 255, 0.05);
-            padding: 4px 10px;
-            border-radius: 4px;
-        }
-
-        .action-link {
+            gap: 15px;
+            background: transparent;
+            color: #fff;
+            font-size: 1rem;
             font-weight: 600;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: gap 0.3s;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transform: translateZ(30px);
         }
 
-        .cyber-card:hover .action-link {
-            gap: 10px; /* Arrow pushes out on hover */
-            color: #fff;
-            text-shadow: 0 0 10px var(--primary-color);
+        .btn-arrow-circle {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Specific Hover Overrides */
-        .cyber-card.theme-green:hover { border-color: #00ffaa; }
-        .cyber-card.theme-green:hover .action-link { color: #00ffaa; text-shadow: 0 0 10px #00ffaa; }
-        .cyber-card.theme-purple:hover { border-color: #b980ff; }
-        .cyber-card.theme-purple:hover .action-link { color: #b980ff; text-shadow: 0 0 10px #b980ff; }
-
-        /* Keyframes */
-        @keyframes staggerFadeIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.8; }
-        }
-        @keyframes glowText {
-            from { text-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
-            to { text-shadow: 0 0 20px rgba(0, 240, 255, 0.6); }
+        .btn-arrow-circle svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 2;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Filtering Utility Class */
-        .hidden { display: none !important; }
+        .magic-card:hover h2 {
+            color: var(--card-theme-color);
+        }
+
+        .magic-card:hover .btn-arrow-circle {
+            background: var(--card-theme-color);
+            border-color: var(--card-theme-color);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--card-theme-color);
+        }
+
+        .magic-card:hover .btn-arrow-circle svg {
+            stroke: #020b16; /* Dark icon on hover */
+            transform: translateX(3px) translateY(-3px);
+        }
+
+        /* Specific Color Themes for Cards */
+        .theme-green { --card-glow-color: rgba(0, 255, 170, 0.8); --card-theme-color: #00ffaa; }
+        .theme-purple { --card-glow-color: rgba(112, 0, 255, 0.8); --card-theme-color: #b980ff; }
+        .theme-cyan { --card-glow-color: rgba(0, 240, 255, 0.8); --card-theme-color: #00f0ff; }
+        .theme-gray { --card-glow-color: rgba(255, 255, 255, 0.4); --card-theme-color: #ffffff; }
+
+        @media (max-width: 768px) {
+            .gradient-heading { font-size: 3rem; }
+            .featured-card-wrapper .magic-card h2 { font-size: 2.2rem; }
+            .magic-card h2 { font-size: 1.8rem; }
+            .magic-card-inner { padding: 30px 20px; }
+        }
     </style>
 </head>
 
@@ -263,88 +279,89 @@
         </div>
     </nav>
 
-    <div class="container">
-        <div class="events-hero">
-            <h1>Discover & Innovate</h1>
-            <p>Explore upcoming challenges, hackathons, and cultural celebrations curated by Stats-O-Locked.</p>
+    <div class="events-hero">
+        <h1 class="gradient-heading">Unlock The Future.</h1>
+        <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto;">Interact with our premium lineup of hackathons, simulations, and cultural events.</p>
+    </div>
+
+    <div class="premium-events-container">
+        
+        <div class="featured-card-wrapper">
+            <a href="techcorp-summit.html" class="magic-card theme-green">
+                <div class="magic-card-inner">
+                    <div class="card-top">
+                        <span class="event-type-badge" style="color: #00ffaa; border-color: rgba(0,255,170,0.3); background: rgba(0,255,170,0.05);"><span style="display:inline-block; width:8px; height:8px; background:#00ffaa; border-radius:50%; margin-right:6px; box-shadow: 0 0 10px #00ffaa; animation: pulse 2s infinite;"></span> Featured Simulation</span>
+                        <span class="event-date">March 30</span>
+                    </div>
+                    <h2>TechCorp Summit</h2>
+                    <p style="max-width: 800px;">From Strategy to Spotlight! Step into the boardroom in this elite 2-day corporate simulation. Test your limits in decision-making, AI implementation, and high-stakes data-driven analysis against the best minds.</p>
+                    <div class="cyber-btn">
+                        Register Now
+                        <div class="btn-arrow-circle">
+                            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
 
-        <div class="filter-container">
-            <button class="filter-btn active" data-filter="all">All Events</button>
-            <button class="filter-btn" data-filter="upcoming">Upcoming</button>
-            <button class="filter-btn" data-filter="past">Past Events</button>
-        </div>
-
-        <div class="advanced-events-grid" id="events-grid">
+        <div class="sub-events-grid">
             
-            <a href="techcorp-summit.html" class="cyber-card theme-green" data-category="upcoming">
-                <div class="card-header">
-                    <span class="cyber-badge badge-live-green"><div class="pulsing-dot bg-green"></div> Registering</span>
-                    <span class="card-date">Mar 30, 2026</span>
-                </div>
-                <h3>TechCorp Summit</h3>
-                <p>From Strategy to Spotlight! A 2-day corporate simulation testing your skills in decision-making, AI implementation, and data-driven analysis.</p>
-                <div class="card-footer">
-                    <div class="tags">
-                        <span class="tag">#Strategy</span>
-                        <span class="tag">#Data</span>
+            <a href="tech-govern.html" class="magic-card theme-purple">
+                <div class="magic-card-inner">
+                    <div class="card-top">
+                        <span class="event-type-badge">Offline MUN</span>
+                        <span class="event-date">Mar 30–31</span>
                     </div>
-                    <span class="action-link">Explore <span style="font-size: 1.2rem;">→</span></span>
+                    <h2>Tech Govern</h2>
+                    <p>Our very first offline event! An intense MUN-inspired governance session combined with vibrant cultural activities. Apply for the Organizing Committee or register as a delegate.</p>
+                    <div class="cyber-btn">
+                        Explore Event
+                        <div class="btn-arrow-circle">
+                            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                    </div>
                 </div>
             </a>
 
-            <a href="tech-govern.html" class="cyber-card theme-purple" data-category="upcoming">
-                <div class="card-header">
-                    <span class="cyber-badge badge-live-purple"><div class="pulsing-dot bg-purple"></div> Registering</span>
-                    <span class="card-date">Mar 30–31, 2026</span>
-                </div>
-                <h3>Tech Govern</h3>
-                <p>Our very first offline event! Join us for an intense MUN-inspired governance session combined with vibrant cultural activities.</p>
-                <div class="card-footer">
-                    <div class="tags">
-                        <span class="tag">#MUN</span>
-                        <span class="tag">#Offline</span>
+            <a href="cultural-event.html" class="magic-card theme-cyan">
+                <div class="magic-card-inner">
+                    <div class="card-top">
+                        <span class="event-type-badge">Cultural Fest</span>
+                        <span class="event-date">Mar 31</span>
                     </div>
-                    <span class="action-link">Explore <span style="font-size: 1.2rem;">→</span></span>
+                    <h2>Cultural Event 2026</h2>
+                    <p>Get ready to showcase your talent! Join the ultimate cultural celebration featuring Dance, Singing, Drama, and Poetry. Compete solo or form a group.</p>
+                    <div class="cyber-btn">
+                        Register Now
+                        <div class="btn-arrow-circle">
+                            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                    </div>
                 </div>
             </a>
 
-            <a href="cultural-event.html" class="cyber-card theme-cyan" data-category="upcoming">
-                <div class="card-header">
-                    <span class="cyber-badge badge-live-cyan"><div class="pulsing-dot bg-cyan"></div> Registering</span>
-                    <span class="card-date">Mar 31, 2026</span>
-                </div>
-                <h3>Cultural Event 2026</h3>
-                <p>Get ready to showcase your talent! Join the ultimate cultural celebration featuring Dance, Singing, Drama, and Poetry.</p>
-                <div class="card-footer">
-                    <div class="tags">
-                        <span class="tag">#Culture</span>
-                        <span class="tag">#Talent</span>
+            <a href="event-details.html" class="magic-card theme-gray">
+                <div class="magic-card-inner">
+                    <div class="card-top">
+                        <span class="event-type-badge">Ended</span>
+                        <span class="event-date">Feb 20–26</span>
                     </div>
-                    <span class="action-link">Explore <span style="font-size: 1.2rem;">→</span></span>
-                </div>
-            </a>
-
-            <a href="event-details.html" class="cyber-card" data-category="past">
-                <div class="card-header">
-                    <span class="cyber-badge badge-ended">Ended</span>
-                    <span class="card-date">Feb 20–26, 2026</span>
-                </div>
-                <h3>CTRL + LOL</h3>
-                <p>The ultimate tech meme-making showdown. Check out the leaderboard and see who debugged their depression with the best humor.</p>
-                <div class="card-footer">
-                    <div class="tags">
-                        <span class="tag">#Memes</span>
-                        <span class="tag">#Online</span>
+                    <h2>CTRL + LOL</h2>
+                    <p>The ultimate tech meme-making showdown. Check out the leaderboard and see who debugged their depression with the best humor.</p>
+                    <div class="cyber-btn">
+                        View Results
+                        <div class="btn-arrow-circle">
+                            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
                     </div>
-                    <span class="action-link">Results <span style="font-size: 1.2rem;">→</span></span>
                 </div>
             </a>
 
         </div>
     </div>
 
-    <footer id="contact" style="margin-top: 50px;">
+    <footer id="contact" style="border-top: 1px solid rgba(255,255,255,0.05); background: #01050a; padding-top: 60px;">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
@@ -358,37 +375,39 @@
                     <a href="mailto:sol@vitbhopal.ac.in">Email Us</a>
                 </div>
             </div>
-            <div class="copyright">&copy; 2026 Stats-O-Locked.</div>
+            <div class="copyright" style="text-align: center; color: #555; padding-bottom: 30px;">&copy; 2026 Stats-O-Locked.</div>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const eventCards = document.querySelectorAll('.cyber-card');
+            const cards = document.querySelectorAll('.magic-card');
 
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // Update Active Button Status
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
+            cards.forEach(card => {
+                // Track mouse for the glow and 3D tilt
+                card.addEventListener('mousemove', e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
 
-                    // Get Filter Target
-                    const filterValue = btn.getAttribute('data-filter');
+                    // Update CSS variables for the glow
+                    card.style.setProperty('--mouse-x', `${x}px`);
+                    card.style.setProperty('--mouse-y', `${y}px`);
 
-                    // Filter Logic with Animation Reset
-                    eventCards.forEach(card => {
-                        // Reset animation to trigger it again
-                        card.style.animation = 'none';
-                        card.offsetHeight; // trigger reflow
-                        card.style.animation = null; 
+                    // Calculate 3D Tilt
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    // The divider dictates how intense the tilt is (higher = less tilt)
+                    const rotateX = ((y - centerY) / centerY) * -5; 
+                    const rotateY = ((x - centerX) / centerX) * 5;
 
-                        if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
-                            card.classList.remove('hidden');
-                        } else {
-                            card.classList.add('hidden');
-                        }
-                    });
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                });
+
+                // Reset card when mouse leaves
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
                 });
             });
         });
