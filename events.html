@@ -78,6 +78,7 @@
         }
         
         /* Glitch & 3D Title */
+        /* Glitch & 3D Title */
         .tech-banner-title {
             position: relative;
             z-index: 2;
@@ -87,9 +88,10 @@
             color: #fff;
             text-transform: uppercase;
             letter-spacing: 8px; 
+            /* REDUCED OFFSET: Changed 4px to 2px */
             text-shadow: 
-                4px 4px 0px rgba(112, 0, 255, 0.6),
-                -4px -4px 0px rgba(0, 240, 255, 0.6),
+                2px 2px 0px rgba(112, 0, 255, 0.6),
+                -2px -2px 0px rgba(0, 240, 255, 0.6),
                 0 0 20px rgba(0, 240, 255, 0.8);
             margin: 0;
             text-align: center;
@@ -97,10 +99,16 @@
         }
 
         @keyframes titlePulse {
-            0% { transform: scale(1); text-shadow: 4px 4px 0px rgba(112, 0, 255, 0.6), -4px -4px 0px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.8); }
-            100% { transform: scale(1.02); text-shadow: 6px 6px 0px rgba(112, 0, 255, 0.8), -6px -6px 0px rgba(0, 240, 255, 0.8), 0 0 40px rgba(0, 240, 255, 1); }
+            /* REDUCED OFFSET: Changed 4px to 2px, and 6px to 3px */
+            0% { 
+                transform: scale(1); 
+                text-shadow: 2px 2px 0px rgba(112, 0, 255, 0.6), -2px -2px 0px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.8); 
+            }
+            100% { 
+                transform: scale(1.02); 
+                text-shadow: 3px 3px 0px rgba(112, 0, 255, 0.8), -3px -3px 0px rgba(0, 240, 255, 0.8), 0 0 40px rgba(0, 240, 255, 1); 
+            }
         }
-
         /* Futuristic Section Divider */
         .section-divider {
             width: 100%;
