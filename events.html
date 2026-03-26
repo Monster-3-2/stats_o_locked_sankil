@@ -176,8 +176,27 @@
                         linear-gradient(180deg, rgba(2, 11, 22, 0.7) 0%, rgba(2, 11, 22, 0.98) 100%);
         }
 
-        .tesla-card:hover {
+        /* --- DYNAMIC BUTTON HOVER FIX --- */
+        
+        /* This makes the button take the color of the card's accent on hover */
+        .tesla-card:hover .cyber-btn {
+            background: var(--card-accent); /* Takes #b980ff for purple card */
+            color: #020b16 !important;    /* Makes text dark navy so it's visible */
             border-color: var(--card-accent);
+            box-shadow: 0 0 30px var(--card-accent);
+            opacity: 1; /* Ensures it is not translucent */
+        }
+
+        /* Ensures the arrow icon also turns dark inside the filled button */
+        .tesla-card:hover .cyber-btn svg {
+            stroke: #020b16; 
+            transform: translateX(8px);
+        }
+        
+        /* Ensure the button text is visible even before hover */
+        .cyber-btn {
+            opacity: 1 !important;
+            visibility: visible !important;
         }
 
         .tesla-card::before {
