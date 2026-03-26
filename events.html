@@ -328,13 +328,28 @@
             transition: transform 0.3s ease;
         }
 
+        /* --- ACCENT-AWARE BUTTON HOVER FIX --- */
         .tesla-card:hover .cyber-btn {
-            background: var(--card-accent);
-            color: #020b16;
-            box-shadow: 0 0 30px rgba(var(--card-accent), 0.6);
+            /* Uses the card's specific theme color (Green, Cyan, or Purple) as the background */
+            background: var(--card-accent) !important; 
+            
+            /* Forces the text to a high-contrast dark color so it is visible against the bright background */
+            color: #020b16 !important; 
+            
+            /* Matches the border to the background for a solid filled look */
+            border-color: var(--card-accent) !important;
+            
+            /* Adds a glowing effect matching the card's theme */
+            box-shadow: 0 0 30px var(--card-accent);
+            
+            /* Ensures the button is fully opaque and visible */
+            opacity: 1 !important;
+            visibility: visible !important;
         }
-
+        
+        /* Fixes the arrow icon color on hover to match the dark text */
         .tesla-card:hover .cyber-btn svg {
+            stroke: #020b16 !important;
             transform: translateX(8px);
         }
 
