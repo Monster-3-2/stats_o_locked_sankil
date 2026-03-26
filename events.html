@@ -225,6 +225,7 @@
         }
 
         /* Pill Status Badge */
+        /* --- UNIVERSAL STATUS BADGES --- */
         .creative-badge {
             display: inline-flex;
             align-items: center;
@@ -236,18 +237,37 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             backdrop-filter: blur(10px);
-            border: 1px solid var(--card-accent);
-            color: var(--card-accent);
-            background: rgba(0, 0, 0, 0.4);
-            box-shadow: 0 0 20px rgba(var(--card-accent), 0.2);
+            background: rgba(0, 0, 0, 0.6);
         }
-
+        
+        /* ONGOING: Always Green */
+        .badge-live {
+            border: 1px solid #00ffaa;
+            color: #00ffaa;
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+        }
+        
+        /* UPCOMING: Always Cyan */
+        .badge-upcoming {
+            border: 1px solid #00f0ff;
+            color: #00f0ff;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+        
+        /* PAST: Always Red */
+        .badge-past {
+            border: 1px solid #ff4b4b;
+            color: #ff4b4b;
+            box-shadow: 0 0 15px rgba(255, 75, 75, 0.3);
+        }
+        
+        /* Ensure the dots match the badge colors */
         .pulse-dot {
             width: 10px; height: 10px; border-radius: 50%;
-            background: currentColor;
+            background: currentColor; /* This correctly picks up the green/cyan/red from the badge */
             box-shadow: 0 0 15px currentColor;
-            animation: fastPulse 1s infinite alternate;
         }
+
 
         @keyframes fastPulse {
             0% { transform: scale(0.8); opacity: 0.5; }
@@ -407,7 +427,7 @@
         
         <a href="techcorp-summit.html" class="tesla-card theme-green" data-tilt data-tilt-max="3" data-tilt-speed="400" data-tilt-perspective="1000" data-tilt-glare="true" data-tilt-max-glare="0.2">
             <div class="card-header">
-                <div class="creative-badge">
+                <div class="creative-badge badge-live">
                     <span class="pulse-dot"></span> Registration Open
                 </div>
                 <div class="date-box">
@@ -425,7 +445,7 @@
 
         <a href="cultural-event.html" class="tesla-card theme-cyan" data-tilt data-tilt-max="3" data-tilt-speed="400" data-tilt-perspective="1000" data-tilt-glare="true" data-tilt-max-glare="0.2">
             <div class="card-header">
-                <div class="creative-badge">
+                <div class="creative-badge badge-upcoming">
                     <span class="pulse-dot"></span> Upcoming Event
                 </div>
                 <div class="date-box">
@@ -443,9 +463,8 @@
 
         <a href="event-details.html" class="tesla-card theme-purple" data-tilt data-tilt-max="3" data-tilt-speed="400" data-tilt-perspective="1000" data-tilt-glare="true" data-tilt-max-glare="0.2">
             <div class="card-header">
-                <div class="creative-badge" style="border-color: rgba(255, 71, 71, 0.3); color: #ff4747;">
-                    <span class="pulse-dot" style="background: #ff4747; box-shadow: 0 0 10px #ff4747; animation: slowPulse 2s infinite alternate;"></span> 
-                    Past Event
+                <div class="creative-badge badge-past">
+                    <span class="pulse-dot"></span> Past Event
                 </div>
                 <div class="date-box" style="opacity: 0.7;">
                     <span class="month">Feb</span>
